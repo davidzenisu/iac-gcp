@@ -37,6 +37,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_ID }}
 
       # Install the latest version of the Terraform CLI
       - name: Setup Terraform
