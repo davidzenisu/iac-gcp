@@ -1,3 +1,5 @@
+# https://github.com/google-github-actions/auth?tab=readme-ov-file#direct-wif
+
 PROJECT_NAME="play-store"
 PROJECT_DISPLAY_NAME="Play Store"
 SERVICE_USER="play-store-user"
@@ -71,6 +73,14 @@ if [[ -z "$WI_OIDC_PROVIDER" ]]; then
 else
   echo "OIDC Provider found with name: $OIDC_NAME (ID: $WI_OIDC_PROVIDER)"
 fi
+
+# grant editor rights to read/write resources in project
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --role="roles/editor" \
+  --member="principalSet://iam.googleapis.com/${WI_POOL_ID}/attribute.repository/${GITHUB_REPOSITORY}"
+
+# finally, enabled resource manager api for your project (required by terraform!)
+gcloud services enable 'cloudresourcemanager.googleapis.com' --project "$PROJECT_ID"
 
 gh secret set GCP_WORKLOAD_PROVIDER --body "$WI_OIDC_PROVIDER"
 gh secret set GCP_PROJECT_ID --body "$PROJECT_ID"
