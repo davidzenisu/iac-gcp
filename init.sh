@@ -73,5 +73,9 @@ else
 fi
 
 gh secret set GCP_WORKLOAD_PROVIDER --body "$WI_OIDC_PROVIDER"
+gh secret set GCP_PROJECT_ID --body "$PROJECT_ID"
+
 # restore auth token!
 export GITHUB_TOKEN=$GITHUB_TOKEN_CACHE
+
+echo Script has finished successfully 🎉
