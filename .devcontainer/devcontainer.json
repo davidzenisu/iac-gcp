@@ -18,10 +18,15 @@
 		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 	"customizations": {
-    // Configure properties specific to VS Code.
-    "vscode": {
-      // Add the IDs of extensions you want installed when the container is created.
-      "extensions": ["GitHub.vscode-github-actions"]
-    }
-  },
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"GitHub.vscode-github-actions"
+			],
+			"settings": {
+				"editor.formatOnSave": true
+			,}
+		}
+	},
 }
