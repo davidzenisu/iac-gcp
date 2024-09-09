@@ -7,10 +7,6 @@ WI_POOL_NAME="github"
 
 # login interactively using your browser
 gcloud auth login
-# gh cli login required for additional access rights!
-GITHUB_TOKEN_CACHE=$GITHUB_TOKEN
-export GITHUB_TOKEN=""
-gh auth login
 
 PROJECT_ID=$(gcloud projects list --filter="name:'$PROJECT_DISPLAY_NAME'" --format="value(projectId)")
 
@@ -102,6 +98,12 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
 gcloud services enable 'cloudresourcemanager.googleapis.com' --project "$PROJECT_ID"
 gcloud services enable 'iamcredentials.googleapis.com' --project "$PROJECT_ID"
 gcloud services enable 'androidpublisher.googleapis.com' --project "$PROJECT_ID"
+
+# gh cli login required for additional access rights!
+# https://github.com/cli/cli/issues/3799
+GITHUB_TOKEN_CACHE=$GITHUB_TOKEN
+export GITHUB_TOKEN=""
+gh auth login
 
 gh secret set GCP_WORKLOAD_PROVIDER --body "$WI_OIDC_PROVIDER"
 gh secret set GCP_PROJECT_ID --body "$PROJECT_ID"
