@@ -3,7 +3,6 @@
 PROJECT_NAME="play-store"
 PROJECT_DISPLAY_NAME="Play Store"
 SERVICE_USER="play-store-user"
-SERVICE_USER_DISPLAY_NAME="Play Store User"
 WI_POOL_NAME="github"
 
 # login interactively using your browser
@@ -23,6 +22,20 @@ if [[ -z "$PROJECT_ID" ]]; then
   gcloud projects create "$PROJECT_ID" --name="$PROJECT_DISPLAY_NAME" 
 else
   echo "Project found with the display name: $PROJECT_DISPLAY_NAME (Project ID: $PROJECT_ID)"
+fi
+
+SERVICE_USER_MAIL=$(gcloud iam service-accounts list --project="${PROJECT_ID}" \
+  --filter="name:'$SERVICE_USER'" \
+  --format="value(email)")
+
+if [[ -z "$SERVICE_USER_MAIL" ]]; then
+  echo "No Service Account Found with the following name: $SERVICE_USER. Creating..."
+  # create project
+  gcloud iam service-accounts create "$SERVICE_USER" \
+  --project "${PROJECT_ID}"
+  SERVICE_USER_MAIL="${SERVICE_USER}@${PROJECT_ID}.iam.gserviceaccount.com"
+else
+  echo "Service User found with name: $SERVICE_USER (ID: $SERVICE_USER_MAIL)"
 fi
 
 WI_POOL_ID=$(gcloud iam workload-identity-pools list \
@@ -74,13 +87,20 @@ else
   echo "OIDC Provider found with name: $OIDC_NAME (ID: $WI_OIDC_PROVIDER)"
 fi
 
-# grant editor rights to read/write resources in project
-gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-  --role="roles/editor" \
+# Allow authentications from the Workload Identity Pool to your Google Cloud Service Account.
+gcloud iam service-accounts add-iam-policy-binding "${SERVICE_USER_MAIL}" \
+  --project="${PROJECT_ID}" \
+  --role="roles/iam.workloadIdentityUser" \
   --member="principalSet://iam.googleapis.com/${WI_POOL_ID}/attribute.repository/${GITHUB_REPOSITORY}"
+
+# grant service user owner rights to read/write resources in project
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --role="roles/owner" \
+  --member="serviceAccount:${SERVICE_USER_MAIL}"
 
 # finally, enabled resource manager api for your project (required by terraform!)
 gcloud services enable 'cloudresourcemanager.googleapis.com' --project "$PROJECT_ID"
+gcloud services enable 'androidpublisher.googleapis.com' --project "$PROJECT_ID"
 
 gh secret set GCP_WORKLOAD_PROVIDER --body "$WI_OIDC_PROVIDER"
 gh secret set GCP_PROJECT_ID --body "$PROJECT_ID"
