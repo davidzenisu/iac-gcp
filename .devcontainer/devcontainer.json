@@ -1,0 +1,18 @@
+{
+	"name": "Alpine",
+	"image": "mcr.microsoft.com/devcontainers/base:alpine",
+	"forwardPorts": [
+		8081
+	],
+	"runArgs": [
+		"-p=8081:8081",
+		"--env-file",
+		".devcontainer/.env"
+	],
+	"mounts": [
+		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached"
+	],
+	"features": {
+		"ghcr.io/dhoeric/features/google-cloud-cli:1": {}
+	}
+}
