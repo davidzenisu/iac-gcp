@@ -17,11 +17,11 @@
 		"ghcr.io/devcontainers/features/terraform:1": {},
 		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
-// 	"customizations": {
-//     // Configure properties specific to VS Code.
-//     "vscode": {
-//       // Add the IDs of extensions you want installed when the container is created.
-//       "extensions": ["streetsidesoftware.code-spell-checker"]
-//     }
-//   }
+	"customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": ["GitHub.vscode-github-actions"]
+    }
+  },
 }
