@@ -1,6 +1,6 @@
 {
-	"name": "Alpine",
-	"image": "mcr.microsoft.com/devcontainers/base:alpine",
+	"name": "Debian",
+	"image": "mcr.microsoft.com/devcontainers/base:debian",
 	//"forwardPorts": [
 	//	8081
 	//],
@@ -14,7 +14,8 @@
 	//],
 	"features": {
 		"ghcr.io/dhoeric/features/google-cloud-cli:1": {},
-		"ghcr.io/devcontainers/features/terraform:1": {}
+		"ghcr.io/devcontainers/features/terraform:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 // 	"customizations": {
 //     // Configure properties specific to VS Code.
