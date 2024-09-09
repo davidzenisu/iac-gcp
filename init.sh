@@ -100,6 +100,7 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
 
 # finally, enabled resource manager api for your project (required by terraform!)
 gcloud services enable 'cloudresourcemanager.googleapis.com' --project "$PROJECT_ID"
+gcloud services enable 'iamcredentials.googleapis.com' --project "$PROJECT_ID"
 gcloud services enable 'androidpublisher.googleapis.com' --project "$PROJECT_ID"
 
 gh secret set GCP_WORKLOAD_PROVIDER --body "$WI_OIDC_PROVIDER"
