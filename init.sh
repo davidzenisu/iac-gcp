@@ -104,6 +104,7 @@ gcloud services enable 'androidpublisher.googleapis.com' --project "$PROJECT_ID"
 
 gh secret set GCP_WORKLOAD_PROVIDER --body "$WI_OIDC_PROVIDER"
 gh secret set GCP_PROJECT_ID --body "$PROJECT_ID"
+gh secret set GCP_SERVICE_ACCOUNT_ID --body "$SERVICE_USER_MAIL"
 
 # restore auth token!
 export GITHUB_TOKEN=$GITHUB_TOKEN_CACHE
