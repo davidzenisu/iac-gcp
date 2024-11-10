@@ -23,3 +23,12 @@
 - Navigate to the Actions tab of your GitHub repository to see your running jobs ([reference](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/monitoring-workflows/viewing-workflow-run-history))
 - You should see a job named `tf plan`.
 - The result of your terraform plan should show up there:
+
+## Backend
+
+> [!CAUTION]
+> Without this configuration your pipeline will set up a local backend during runtime which are discarded on a Github-hosted runner after completion!
+
+To set up a backend, you need to follow two more steps during setup:
+- Configure the partial backend configuration by replacing `"local"` with your preffered backend in `backend.tf`, e.g.: `gcs`.
+- Provide the backend configuration to the GitHub workflow `terraform init` steps (multiple!) so it can use the correct backend. The details should be provided via GitHub secrets and the authentication to the backend should always use identity federation or other secure alternatives!

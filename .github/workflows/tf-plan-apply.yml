@@ -52,6 +52,8 @@ jobs:
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform init
+        # PROVIDE TERRAFORM BACKEND CONFIGURATION HERE:
+        # e.g. -backend-config="bucket=${{ secrets.GCP_STORAGE_BUCKET }}" etc.
 
       # Checks that all Terraform configuration files adhere to a canonical format
       # Will fail the build if not
@@ -143,6 +145,9 @@ jobs:
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init
+      # PROVIDE TERRAFORM BACKEND CONFIGURATION HERE:
+      # e.g. -backend-config="bucket=${{ secrets.GCP_STORAGE_BUCKET }}" etc.
+
 
     # Download saved plan from artifacts  
     - name: Download Terraform Plan
