@@ -1,6 +1,6 @@
 # stolen from https://github.com/Azure-Samples/terraform-github-actions
 
-name: "tf plan"
+name: "tf plan apply"
 
 on:
   workflow_dispatch:
