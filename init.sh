@@ -1,8 +1,21 @@
 # https://github.com/google-github-actions/auth?tab=readme-ov-file#direct-wif
 
-PROJECT_NAME="play-store"
-PROJECT_DISPLAY_NAME="Play Store"
-SERVICE_USER="play-store-user"
+if [[ "$GC_PROJECT_NAME" ]]; then
+  PROJECT_NAME=$GC_PROJECT_NAME
+else
+  read -p "Enter Google Cloud project backend name: " PROJECT_NAME
+fi
+if [[ "$GC_PROJECT_DISPLAY_NAME" ]]; then
+  PROJECT_DISPLAY_NAME=$GC_PROJECT_DISPLAY_NAME
+else
+  read -p "Enter Google Cloud project display name: " PROJECT_DISPLAY_NAME
+fi
+if [[ "$GC_SERVICE_USER" ]]; then
+  SERVICE_USER=$GC_SERVICE_USER
+else
+  read -p "Enter Google Cloud service user name: " SERVICE_USER
+fi
+
 WI_POOL_NAME="github"
 
 # login interactively using your browser
@@ -13,8 +26,9 @@ PROJECT_ID=$(gcloud projects list --filter="name:'$PROJECT_DISPLAY_NAME'" --form
 if [[ -z "$PROJECT_ID" ]]; then
   echo "No project found with the display name: $PROJECT_DISPLAY_NAME. Creating..."
   # create project
-  RANDOM_SUFFIX=$(tr -dc a-z0-9 </dev/urandom | head -c 6; echo)
+  random_suffix=$(tr -dc a-z0-9 </dev/urandom | head -c 6; echo)
   PROJECT_ID="${PROJECT_NAME}-${random_suffix}"
+  echo "Creating project $PROJECT_DISPLAY_NAME (id: $PROJECT_ID)"
   gcloud projects create "$PROJECT_ID" --name="$PROJECT_DISPLAY_NAME" 
 else
   echo "Project found with the display name: $PROJECT_DISPLAY_NAME (Project ID: $PROJECT_ID)"
