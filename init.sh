@@ -19,7 +19,7 @@ fi
 WI_POOL_NAME="github"
 
 # login interactively using your browser
-gcloud auth login
+#gcloud auth login
 
 PROJECT_ID=$(gcloud projects list --filter="name:'$PROJECT_DISPLAY_NAME'" --format="value(projectId)")
 
@@ -69,7 +69,10 @@ else
   echo "Workload Identity Pool found with name: $WI_POOL_NAME (ID: $WI_POOL_ID)"
 fi
 
-OIDC_NAME=${GITHUB_REPOSITORY#$GITHUB_USER/}
+echo "$string" | tr xyz _
+
+OIDC_NAME="test"
+echo OIDC would be $OIDC_NAME
 
 WI_OIDC_PROVIDER=$(gcloud iam workload-identity-pools providers list \
   --project="${PROJECT_ID}" \
@@ -84,9 +87,9 @@ if [[ -z "$WI_OIDC_PROVIDER" ]]; then
     --project="${PROJECT_ID}" \
     --location="global" \
     --workload-identity-pool="$WI_POOL_NAME" \
-    --display-name="GitHub OIDC provider" \
+    --display-name="GitHub OIDC provider - prod" \
     --attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner" \
-    --attribute-condition="assertion.repository_owner == '${GITHUB_USER}'" \
+    --attribute-condition="assertion.repository_owner == '${github_org}'" \
     --issuer-uri="https://token.actions.githubusercontent.com"
     WI_OIDC_PROVIDER=$(gcloud iam workload-identity-pools providers describe "$OIDC_NAME" \
       --project="${PROJECT_ID}" \
@@ -122,6 +125,14 @@ gh auth login
 gh secret set GCP_WORKLOAD_PROVIDER --body "$WI_OIDC_PROVIDER"
 gh secret set GCP_PROJECT_ID --body "$PROJECT_ID"
 gh secret set GCP_SERVICE_ACCOUNT_ID --body "$SERVICE_USER_MAIL"
+
+# optionally, a storage bucket can be created as well:
+bucket_name="${PROJECT_NAME}_terraform"
+bucket_prefix="terraform/state"
+gcloud storage buckets create gs://${bucket_name} --location="US-EAST1" --project="$PROJECT_ID"
+# then, set secrets for github
+gh secret set GCP_BACKEND_BUCKET --body "$bucket_name"
+gh secret set GCP_BACKEND_PREFIX --body "$bucket_prefix"
 
 # restore auth token!
 export GITHUB_TOKEN=$GITHUB_TOKEN_CACHE
