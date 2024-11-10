@@ -27,6 +27,8 @@ jobs:
     env:
       #this is needed since we are running terraform with read-only permissions
       ARM_SKIP_PROVIDER_REGISTRATION: true
+    outputs:
+      tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
     defaults:
       run:
         shell: bash
@@ -83,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: tfplan
+          path: ${{ env.terraform_directory }}/tfplan
 
       # Create string output of Terraform Plan
       - name: Create String Output
